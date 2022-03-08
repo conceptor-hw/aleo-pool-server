@@ -61,7 +61,7 @@ pub fn start(node: Node, server_sender: Sender<ServerMessage>) {
             match timeout(Duration::from_secs(5), TcpStream::connect(&node.operator)).await {
                 Ok(socket) => match socket {
                     Ok(socket) => {
-                        info!("Connected to {}", node.operator);
+                        info!("Connected to {}!!!!!!!!!!", node.operator);
                         let mut framed = Framed::new(socket, Message::PeerRequest);
                         let challenge = Message::ChallengeRequest(
                             OperatorTrial::<Testnet2>::MESSAGE_VERSION,
@@ -81,7 +81,8 @@ pub fn start(node: Node, server_sender: Sender<ServerMessage>) {
                         loop {
                             tokio::select! {
                                 Some(message) = receiver.recv() => {
-                                    match message {
+                                    info!("##### Received {} receiver.recv() 11111111", message.name);
+                                    match message.clone() {
                                         Message::NewBlockTemplate(template) => {
                                             if let Ok(template) = template.deserialize().await {
                                                 let block_height = template.block_height();
@@ -104,6 +105,7 @@ pub fn start(node: Node, server_sender: Sender<ServerMessage>) {
                                 result = framed.next() => match result {
                                     Some(Ok(message)) => {
                                         trace!("Received {} from operator", message.name());
+                                        info!("##### Received {} from operator222222222", message.name);
                                         match message {
                                             Message::ChallengeRequest(..) => {
                                                 let resp = Message::ChallengeResponse(Data::Object(Testnet2::genesis_block().header().clone()));
@@ -144,6 +146,7 @@ pub fn start(node: Node, server_sender: Sender<ServerMessage>) {
                                             Message::NewBlockTemplate(template) => {
                                                 if let Ok(template) = template.deserialize().await {
                                                     let block_height = template.block_height();
+                                                    info!("!!!!recv tmplate message from server node...");
                                                     if let Err(e) = server_sender.send(ServerMessage::NewBlockTemplate(template)).await {
                                                         error!("Error sending new block template to pool server: {}", e);
                                                     } else {

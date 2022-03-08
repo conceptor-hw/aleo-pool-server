@@ -6,6 +6,9 @@ mod db;
 mod message;
 mod operator_peer;
 mod server;
+mod redis_subscriber;
+mod redis_publisher;
+mod message_handler;
 
 use std::sync::Arc;
 
@@ -93,6 +96,8 @@ async fn main() {
 
     let node = Node::init(operator);
 
+    redis_subscriber::start();
+
     let server = Server::init(port, node.sender(), accounting.sender()).await;
 
     operator_peer::start(node, server.sender());
@@ -109,6 +114,17 @@ async fn main() {
         }
     }
 
+    std::thread::sleep(Duration::from_secs(1));
+    let mut i = 0;
+    while i <= 100 {
+        redis_publisher::publish_message(message::PubSubMessage::new(
+            message::Order::new("message from rust".to_string(), 0, i),
+            "rust_channel".to_string(),
+        )).unwrap();
+
+        std::thread::sleep(Duration::from_secs(1));
+        i = i + 1;
+    }
     std::future::pending::<()>().await;
 }
 
