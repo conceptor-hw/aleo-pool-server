@@ -29,8 +29,6 @@ signal-hook = "0.3.13"
 bytes = "1.1.0"
 byteorder = "1.4.3"
 warp = "0.3.2"
-redis = "*"
-uuid = { version = "0.8.2", features = ["v4"] }
 
 [dependencies.reqwest]
 version = "0.11.9"

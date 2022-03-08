@@ -65,6 +65,7 @@ impl Connection {
             tokio::select! {
                 Some(msg) = receiver.recv() => {
                     trace!("Sending message {} to peer {:?}", msg.name(), peer_addr);
+                    info!("Sending message {} to peer {:?} 111111 ", msg.name(), peer_addr);
                     if let Err(e) = framed.send(msg).await {
                         error!("Failed to send message to peer {:?}: {:?}", peer_addr, e);
                     }
@@ -72,6 +73,7 @@ impl Connection {
                 result = framed.next() => match result {
                     Some(Ok(msg)) => {
                         trace!("Received message {} from peer {:?}", msg.name(), peer_addr);
+                        info!("Sending message {} to peer {:?} 2222222", msg.name(), peer_addr);
                         match msg {
                             ProverMessage::Submit(height, nonce, proof) => {
                                 if let Err(e) = server_sender
