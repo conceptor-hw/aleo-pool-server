@@ -8,11 +8,9 @@ pub fn publish_message(message: PubSubMessage) -> Result<(), Box<dyn Error>> {
     let client = redis::Client::open("redis://localhost:6379")?;
     let mut con = client.get_connection()?;
 
-    // let json = serde_json::to_string(&message)?;
+    let json = serde_json::to_string(&message)?;
 
-    let data = bincode::serialized_size(&message).unwrap();
-
-    con.publish(message.channel, data)?;
+    con.publish(message.channel, json)?;
 
     Ok(())
 }

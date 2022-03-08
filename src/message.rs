@@ -1,4 +1,5 @@
 use std::io::Write;
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use anyhow::anyhow;
 use byteorder::{LittleEndian, ReadBytesExt};
@@ -166,7 +167,7 @@ impl Decoder for ProverMessage {
 }
 
 //订阅发布redis message
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PubSubMessage {
     pub id: String,
     pub channel: String,
@@ -187,7 +188,7 @@ impl PubSubMessage {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Order {
     pub description: String,
     pub quantity: u64,

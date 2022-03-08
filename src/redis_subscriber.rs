@@ -12,9 +12,8 @@ pub fn subscribe(channel: String) -> Result<(), Box<dyn Error>> {
 
         let _: () = con
             .subscribe(&[channel], |msg| {
-                let receive = msg.get_payload().unwrap();
-                // let message_obj = serde_json::from_str::<PubSubMessage>(&received).unwrap();
-                let message_obj:PubSubMessage = bincode::deserialize(&receive).unwrap();
+                let received: String = msg.get_payload().unwrap();
+                let message_obj = serde_json::from_str::<PubSubMessage>(&received).unwrap();
 
                 message_handler::handle(message_obj);
 

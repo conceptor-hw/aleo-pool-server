@@ -81,7 +81,7 @@ pub fn start(node: Node, server_sender: Sender<ServerMessage>) {
                         loop {
                             tokio::select! {
                                 Some(message) = receiver.recv() => {
-                                    info!("##### Received {} receiver.recv() 11111111", message.name());
+                                    info!("##### Received {} receiver.recv() in operator ", message.name());
                                     match message.clone() {
                                         Message::NewBlockTemplate(template) => {
                                             if let Ok(template) = template.deserialize().await {
