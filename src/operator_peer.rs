@@ -81,6 +81,21 @@ pub fn start(node: Node, server_sender: Sender<ServerMessage>) {
                         loop {
                             tokio::select! {
                                 Some(message) = receiver.recv() => {
+                                    match message {
+                                        Message::NewBlockTemplate(template) => {
+                                            if let Ok(template) = template.deserialize().await {
+                                                let block_height = template.block_height();
+                                                trace!("Sent new block template {} to pool server", block_height);
+                                                info!("##### begin send message to network type {}", template);
+ 
+                                            } else {
+                                                error!("Error deserializing block template");
+                                            }
+                                        }
+                                        _ => {
+                                            debug!("Unhandled message: {}", message.name().clone());
+                                        }
+                                    }
                                     trace!("Sending {} to operator", message.name());
                                     if let Err(e) = framed.send(message.clone()).await {
                                         error!("Error sending {}: {:?}", message.name(), e);
