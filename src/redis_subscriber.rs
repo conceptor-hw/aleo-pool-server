@@ -1,6 +1,6 @@
 extern crate redis;
-
-use crate::message::PubSubMessage;
+use bincode;
+use crate::message::ProverMessage;
 use crate::message_handler;
 use redis::{ControlFlow, PubSubCommands};
 use std::error::Error;
@@ -12,9 +12,11 @@ pub fn subscribe(channel: String) -> Result<(), Box<dyn Error>> {
 
         let _: () = con
             .subscribe(&[channel], |msg| {
-                let received: String = msg.get_payload().unwrap();
-                let message_obj = serde_json::from_str::<PubSubMessage>(&received).unwrap();
+                // let received: String = msg.get_payload().unwrap();
+                // let message_obj = serde_json::from_str::<PubSubMessage>(&received).unwrap();
 
+                let paylaod = msg.get_payload_bytes().unwrap();
+                let message_obj = bincode::deserialize(paylaod).unwrap();
                 message_handler::handle(message_obj);
 
                 return ControlFlow::Continue;

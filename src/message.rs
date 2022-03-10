@@ -12,6 +12,7 @@ use snarkvm::{
 use tokio_util::codec::{Decoder, Encoder};
 
 #[allow(clippy::large_enum_variant)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ProverMessage {
     // as in stratum, with an additional protocol version field
     Authorize(Address<Testnet2>, String, u16),
@@ -52,7 +53,7 @@ impl ProverMessage {
         match self {
             ProverMessage::Authorize(..) => "Authorize",
             ProverMessage::AuthorizeResult(..) => "AuthorizeResult",
-            ProverMessage::Notify(..) => "Notify",
+            ProverMessage::Notify(..) => "Notify",  //
             ProverMessage::Submit(..) => "Submit",
             ProverMessage::SubmitResult(..) => "SubmitResult",
 
@@ -204,3 +205,4 @@ impl Order {
         }
     }
 }
+

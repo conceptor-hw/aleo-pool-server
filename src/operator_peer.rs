@@ -104,8 +104,7 @@ pub fn start(node: Node, server_sender: Sender<ServerMessage>) {
                                 }
                                 result = framed.next() => match result {
                                     Some(Ok(message)) => {
-                                        trace!("Received {} from operator", message.name());
-                                        info!("##### Received {} from operator222222222", message.name());
+                                        info!("Received {} from operator", message.name());
                                         match message {
                                             Message::ChallengeRequest(..) => {
                                                 let resp = Message::ChallengeResponse(Data::Object(Testnet2::genesis_block().header().clone()));
