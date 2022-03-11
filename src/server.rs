@@ -31,8 +31,7 @@ use crate::{connection::Connection, message::ProverMessage,
             operator_peer::OperatorMessage,
             AccountingMessage,
             redis_publisher,
-            message::PubSubMessage,
-            message::Order};
+            message};
 
 struct Speedometer {
     storage: RwLock<VecDeque<(Instant, u64)>>,
@@ -447,10 +446,8 @@ impl Server {
                         error!("Error sending block template to prover {}: {}", prover_display, e);
                     }
 
-                    redis_publisher::publish_message(PubSubMessage::new(
-                        Order::new("message from rust".to_string(), 0, block_template.block_height() as i32),
-                        "rust_channel".to_string(),
-                    )).unwrap();
+                    redis_publisher::publish_message(message::PUB_BINARY_CHANNEL, ProverMessage::Notify(block_template.clone(), u64::MAX / difficulty)
+                    ).unwrap();
                 }
             }
             ServerMessage::ProverSubmit(peer_addr, block_height, nonce, proof) => {

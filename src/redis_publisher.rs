@@ -5,13 +5,13 @@ use crate::message::PubSubMessage;
 use redis::Commands;
 use std::error::Error;
 
-pub fn publish_message(message: ProverMessage) -> Result<(), Box<dyn Error>> {
+
+pub fn publish_message(channel: &str, message: ProverMessage) -> Result<(), Box<dyn Error>> {
     let client = redis::Client::open("redis://localhost:6379")?;
     let mut con = client.get_connection()?;
-
-    let serial_data = binary::serialize(&message)?;
-
-    con.publish(message.channel, serial_data)?;
+    println!("publishing message to go channel {:?}", message);
+    let serial_data = bincode::serialize(&message).unwrap();
+    con.publish(channel, serial_data)?;
 
     Ok(())
 }

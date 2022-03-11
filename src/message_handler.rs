@@ -1,5 +1,5 @@
 use crate::message::ProverMessage;
 
 pub fn handle(message: ProverMessage) {
-    println!( "subscribe handle is : id{?} ",  message);
+    println!( "subscribe handle is : id{:?} ",  message);
 }

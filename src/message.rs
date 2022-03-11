@@ -167,6 +167,11 @@ impl Decoder for ProverMessage {
     }
 }
 
+pub const SUB_BINARY_CHANNEL: &str = "binary_channel_schedule_for_pool";
+pub const PUB_BINARY_CHANNEL: &str = "binary_channel_pool";
+pub const SUB_MGT_CHANNEL: &str = "mgt_channel_schedule_for_pool";
+pub const PUB_MGT_CHANNEL: &str = "mgt_channel_pool";
+
 //订阅发布redis message
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PubSubMessage {
@@ -176,10 +181,10 @@ pub struct PubSubMessage {
 }
 
 impl PubSubMessage {
-    pub fn new(payload: Order, channel: String) -> PubSubMessage {
+    pub fn new(payload: Order) -> PubSubMessage {
         PubSubMessage {
             id: PubSubMessage::generate_id(),
-            channel,
+            channel: PUB_MGT_CHANNEL.to_string(),
             payload,
         }
     }
