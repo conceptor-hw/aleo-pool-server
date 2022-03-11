@@ -11,7 +11,6 @@ mod redis_publisher;
 mod message_handler;
 
 use std::sync::Arc;
-use std::time::Duration;
 use futures::stream::StreamExt;
 use signal_hook::consts::{SIGABRT, SIGHUP, SIGINT, SIGQUIT, SIGTERM, SIGTSTP, SIGUSR1};
 use signal_hook_tokio::Signals;
@@ -96,7 +95,7 @@ async fn main() {
 
     let node = Node::init(operator);
 
-    redis_subscriber::start();
+    redis_subscriber::start().unwrap();
 
     let server = Server::init(port, node.sender(), accounting.sender()).await;
 
